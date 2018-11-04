@@ -8,15 +8,18 @@ pipeline {
                 powershell 'get-service docker'
             }
         }
-        stage('remove container') {
+        stage('check container') {
             steps {
-					bat 'docker stop compiler'
-					bat 'docker rm compiler'		
-            }
-        }
-		stage('start container') {
-            steps {
-					bat 'docker run -it --name compiler -h compilerhost --r always -p 8000:80 -v K:/Docker/dockervol:c:/dockervol microsoft/windowsservercore:1709'		
+					script {
+                        containername = powershell(returnStdout: true, script:'docker ps -q -f status=running -f name=^/compiler').trim()
+						
+						if ("${containername}"){
+                            echo "${containername} is running!!"
+                        }else{
+							bat 'docker rm compiler'	
+							bat 'docker run -it --name compiler -h compilerhost -p 8000:80 -v K:/Docker/dockervol:c:/dockervol microsoft/windowsservercore:1709'
+                        }
+                    }
             }
         }
         stage('Get In Container') {
