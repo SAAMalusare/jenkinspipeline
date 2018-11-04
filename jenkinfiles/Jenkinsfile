@@ -10,16 +10,25 @@ pipeline {
         }
         stage('check container') {
             steps {
-					script {
-                        containername = powershell(returnStdout: true, script:'docker ps -q -f status=running -f name=^/compiler$').trim()
+				script {
+					echo 'Checking if container is running...'
+					containername = powershell(returnStdout: true, script:'docker ps -q -f status=running -f name=^/compiler$').trim()
+					
+					if ("${containername}"){
+						echo "${containername} is running!!"
+					}else{
+						echo 'Checking if container is stopped...'
+						stopped = powershell(returnStdout: true, script:'docker ps -q -f status=exited -f name=^/compiler$').trim()
 						
-						if ("${containername}"){
-                            echo "${containername} is running!!"
-                        }else{
-							bat 'docker rm compiler'	
+						if (stopped){
+							echo 'Stopped container named \"compiler\" found!!! ... starting it now'
+							bat 'docker start compiler'	
+						}else{
+							echo 'No stopped container named \"compiler\" found'
 							bat 'docker run -it --name compiler -h compilerhost -p 8000:80 -v K:/Docker/dockervol:c:/dockervol microsoft/windowsservercore:1709'
-                        }
-                    }
+						}
+					}
+				}
             }
         }
         stage('Get In Container') {
