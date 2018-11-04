@@ -8,7 +8,7 @@ pipeline {
                 powershell 'get-service docker'
             }
         }
-        stage('check container') {
+        stage('Container Operations') {
             steps {
 				script {
 					echo 'Checking if container is running...'
@@ -32,7 +32,28 @@ pipeline {
 				}
             }
         }
-        stage('Get In Container') {
+        stage('Compiling Application') {
+ 			steps{
+                script {
+                         bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
+                }
+            }    
+        }
+		stage('Deploying Application') {
+ 			steps{
+                script {
+                         bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
+                }
+            }    
+        }
+		stage('Creating docker image') {
+ 			steps{
+                script {
+                         bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
+                }
+            }    
+        }
+		stage('Pushing image to registry') {
  			steps{
                 script {
                          bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
