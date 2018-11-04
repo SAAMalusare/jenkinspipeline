@@ -18,12 +18,16 @@ pipeline {
         }
         stage('Get In Container') {
             steps{
-                   echo "Hello ${containername}"
+                   echo "Hello ${containername} :----"
                   
                    script {
                        if ("${containername}" == "compiler"){
-                            echo "Hello Two ${containername}"
+                            echo "Executing commands inside container: ${containername}"
+                            bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
+                            
                         }else{
+                            echo "Starting Compiler container"
+                            bat 'docker start compiler'
                             echo "Hello Three ${containername}"
                         }
                    }
