@@ -24,8 +24,9 @@ pipeline {
 							echo 'Stopped container named \"compiler\" found!!! ... starting it now'
 							bat 'docker start compiler'	
 						}else{
-							echo 'No stopped container named \"compiler\" found'
-							bat 'docker run -i --name compiler -h compilerhost -p 8000:80 -v K:/Docker/dockervol:c:/dockervol microsoft/windowsservercore:1709'
+							echo 'Creating and running new container'
+							bat 'docker create -i --name compiler -h compilerhost -p 8000:80 -v K:/Docker/dockervol:c:/dockervol microsoft/windowsservercore:1709'
+							bat 'docker start compiler'
 						}
 					}
 				}
