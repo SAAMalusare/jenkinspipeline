@@ -15,7 +15,7 @@ pipeline {
         }
 		stage('start container') {
             steps {
-					bat 'docker run -it --name compiler -h compilerhost --r always -p 8000:80 -v K:/Docker/dockervol:c:/dockervol microsoft/windowsservercore:1709'		
+					bat 'docker run -it --name compiler -h compilerhost --r always -p 8000:80 -v K:\Docker\dockervol:c:\dockervol microsoft/windowsservercore:1709'		
             }
         }
         stage('Get In Container') {
