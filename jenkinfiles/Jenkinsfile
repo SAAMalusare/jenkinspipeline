@@ -11,7 +11,7 @@ pipeline {
         stage('check container') {
             steps {
 					script {
-                        containername = powershell(returnStdout: true, script:'docker ps -q -f status=running -f name=^/compiler').trim()
+                        containername = powershell(returnStdout: true, script:'docker ps -q -f status=running -f name=^/compiler$').trim()
 						
 						if ("${containername}"){
                             echo "${containername} is running!!"
