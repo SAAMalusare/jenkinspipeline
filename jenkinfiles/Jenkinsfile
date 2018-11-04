@@ -3,34 +3,29 @@ def containername
 pipeline {
     agent any
     stages {
-        stage('Test') {
+        stage('Check Docker') {
             steps {
-                bat 'Hostname'
+                bat 'docker version'
             }
         }
-        stage('Check Container') {
+        stage('remove container') {
             steps {
-                    echo "Assiging value to containername "
-                    script {
-                        containername = powershell(returnStdout: true, script:'docker ps --format \'{{.Names}}\'').trim()
-                    }
+					bat 'docker rm compiler'		
+            }
+        }
+		stage('start container') {
+            steps {
+					bat 'docker run -it --name compiler -h compilerhost --r always -p 8000:80 -v K:\Docker\dockervol:c:\dockervol microsoft/windowsservercore:1709'		
             }
         }
         stage('Get In Container') {
             steps{
-                   echo "Hello ${containername} :----"
-                  
-                   script {
-                       if ("${containername}" == "compiler"){
-                            echo "Executing commands inside container: ${containername}"
-                            bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
-                            
-                        }else{
-                            echo "Starting Compiler container"
-                            bat 'docker start compiler'
-                            echo "Hello Three ${containername}"
-                        }
-                   }
+					bat 'hostname'
+            }
+			steps{
+                script {
+                         bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
+                }
             }    
         }
     }
