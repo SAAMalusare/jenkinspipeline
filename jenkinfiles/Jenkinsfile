@@ -1,0 +1,33 @@
+def containername
+
+pipeline {
+    agent any
+    stages {
+        stage('Test') {
+            steps {
+                bat 'Hostname'
+            }
+        }
+        stage('Check Container') {
+            steps {
+                    echo "Assiging value to containername "
+                    script {
+                        containername = powershell(returnStdout: true, script:'docker ps --format \'{{.Names}}\'').trim()
+                    }
+            }
+        }
+        stage('Get In Container') {
+            steps{
+                   echo "Hello ${containername}"
+                  
+                   script {
+                       if ("${containername}" == "compiler"){
+                            echo "Hello Two ${containername}"
+                        }else{
+                            echo "Hello Three ${containername}"
+                        }
+                   }
+            }    
+        }
+    }
+}
