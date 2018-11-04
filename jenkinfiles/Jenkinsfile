@@ -19,10 +19,7 @@ pipeline {
             }
         }
         stage('Get In Container') {
-            steps{
-					bat 'hostname'
-            }
-			steps{
+ 			steps{
                 script {
                          bat 'docker exec -i compiler powershell -c c:/dockervol/abc.bat'
                 }
